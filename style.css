@@ -26,6 +26,7 @@ main{
 #products img{
   border: thick black solid;
   box-sizing: border-box;
-  width:90%;
+  max-width:90%;
+  max-height: 100%;
 }
 

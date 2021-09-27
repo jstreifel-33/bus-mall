@@ -28,7 +28,7 @@ new Product('Pen', 'pen.jpg');
 new Product('Pet-sweep', 'pet-sweep.jpg');
 new Product('Scissors', 'scissors.jpg');
 new Product('Shark', 'shark.jpg');
-new Product('Sweep', 'sweep.jpg');
+new Product('Sweep', 'sweep.png');
 new Product('Tauntaun', 'tauntaun.jpg');
 new Product('Unicorn', 'unicorn.jpg');
 new Product('Water-can', 'water-can.jpg');
@@ -50,12 +50,30 @@ function cloneArray(array){
   return newArray;
 }
 
+//function for eliminating duplicates
+function dupeKill(obj, array){
+  for (let i = 0; i < array.length; i++){
+    if (obj.name === array[i].name){
+      array.splice(i, 1);
+    }
+  }
+}
+
+//define choice containers
+let choice1 = document.getElementById('img1');
+let choice2 = document.getElementById('img2');
+let choice3 = document.getElementById('img3');
+
 //function to pick and render 3 random products
 function renderChoices(){
+
   //clone Product pool for array manipulation
   let options = cloneArray(Product.allProducts);
 
-  //remove past products from choices
+  //remove past products from choices, if necessary
+  dupeKill(choice1, options);
+  dupeKill(choice2, options);
+  dupeKill(choice3, options);
 
   //grab 3 random DIFFERENT objects from options.
   let index = randIndex(options);
@@ -70,6 +88,41 @@ function renderChoices(){
   let img3 = options[index];
   options.splice(index, 1);
 
+  //render imgs to page
+  choice1.src = img1.url;
+  choice1.name = img1.name;
+  choice2.src = img2.url;
+  choice2.name = img2.name;
+  choice3.src = img3.url;
+  choice3.name = img3.name;
 
-  
+  //keep count of render total per obj
+  img1.timesShown++;
+  img2.timesShown++;
+  img3.timesShown++;
+
+  // let log = [img1, img2, img3];
+  // console.log(log);
 }
+
+//render initial choices
+renderChoices();
+
+//handle user input
+function choiceHandler(event){
+  let userChoice = event.target;
+  let choices = Product.allProducts;
+  console.log(userChoice.name);
+  for (let i = 0; i < choices.length; i++){
+    if(userChoice.name === choices[i].name){
+      choices[i].votes++;
+    }
+  }
+  renderChoices();
+}
+
+choice1.addEventListener('click', choiceHandler);
+choice2.addEventListener('click', choiceHandler);
+choice3.addEventListener('click', choiceHandler);
+
+
