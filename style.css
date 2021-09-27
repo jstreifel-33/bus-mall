@@ -1,0 +1,31 @@
+
+/* HEADER CONTENT */
+
+
+
+/* MAIN CONTENT */
+
+main{
+  height:80vh;
+}
+
+#results{
+  float:left;
+  width: 25%;
+  height:100%;
+}
+
+#products{
+  display:grid;
+  width:75%;
+  height:100%;
+  grid-template-columns: 33% 33% 33%;
+  grid-template-rows: 50% 50%;
+}
+
+#products img{
+  border: thick black solid;
+  box-sizing: border-box;
+  width:90%;
+}
+
