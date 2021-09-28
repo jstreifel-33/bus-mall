@@ -121,7 +121,6 @@ function choiceHandler(event) {
         choices[i].votes++;
       }
     }
-    renderChoices();
     totalVotes++;
 
     if(totalVotes === 25){
@@ -129,7 +128,7 @@ function choiceHandler(event) {
       choice1.removeEventListener('click', choiceHandler);
       choice2.removeEventListener('click', choiceHandler);
       choice3.removeEventListener('click', choiceHandler);
-    }
+    }else{renderChoices();}
 
   }
 }
