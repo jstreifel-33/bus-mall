@@ -1,6 +1,5 @@
 'use strict';
 
-
 //Product constructor
 function Product(name, url) {
   this.name = name;
@@ -123,12 +122,12 @@ function choiceHandler(event) {
     }
     totalVotes++;
 
-    if(totalVotes === 25){
+    if (totalVotes === 25) {
       alert('Voting complete! Please click "View Results" to see results!');
       choice1.removeEventListener('click', choiceHandler);
       choice2.removeEventListener('click', choiceHandler);
       choice3.removeEventListener('click', choiceHandler);
-    }else{renderChoices();}
+    } else { renderChoices(); }
 
   }
 }
@@ -137,8 +136,22 @@ choice1.addEventListener('click', choiceHandler);
 choice2.addEventListener('click', choiceHandler);
 choice3.addEventListener('click', choiceHandler);
 
-//Render results
+//return array containing voting results when invoked.
+function fetchData() {
+  let products = Product.allProducts;
+  let names = [];
+  let votes = [];
+  let timesShown = [];
+  for (let i = 0; i < products.length; i++) {
+    names[i] = products[i].name;
+    votes[i] = products[i].votes;
+    timesShown[i] = products[i].timesShown;
+  }
+  let votingData = [names, votes, timesShown];
+  return votingData;
+}
 
+//Render results
 let resultsRendered = false;
 let listEl = document.getElementById('countList');
 
@@ -146,16 +159,94 @@ function renderResults() {
   if (totalVotes >= 25 && !resultsRendered) {
     let products = Product.allProducts;
     for (let i = 0; i < products.length; i++) {
-      let percentPicked = Math.round(1000 * products[i].votes / products[i].timesShown) / 10;
-      let text = products[i].name + ': ' + products[i].votes + ' votes. (' + percentPicked + '% of ' + products[i].timesShown + ' showings)';
+      let text = '';
+
+      if (products[i].timesShown === 0) {
+        text = products[i].name + ': not shown.';
+      } else {
+        let percentPicked = Math.round(1000 * products[i].votes / products[i].timesShown) / 10;
+        text = products[i].name + ': ' + products[i].votes + ' votes. (' + percentPicked + '% of ' + products[i].timesShown + ' showings)';
+      }
+
       let choiceEl = document.createElement('li');
       choiceEl.innerText = text;
       listEl.appendChild(choiceEl);
     }
+    renderChart();
     resultsRendered = true;
-  }else if(resultsRendered){
+  } else if (resultsRendered) {
     alert('Results already displayed!');
-  }else {
+  } else {
     alert('25 votes required! Current votes: ' + totalVotes);
   }
+}
+
+
+//Configure Data Bar Chart
+function renderChart() {
+  let greeting = document.getElementById('greeting');
+  greeting.style.display = 'none';
+
+  let votingData = fetchData();
+  let ctx = document.getElementById('voteChart').getContext('2d');
+  let voteChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: votingData[0],
+      datasets: [{
+        label: '# of Votes',
+        data: votingData[1],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.6)',
+          'rgba(54, 162, 235, 0.6)',
+          'rgba(255, 206, 86, 0.6)',
+          'rgba(75, 192, 192, 0.6)',
+          'rgba(153, 102, 255, 0.6)',
+          'rgba(255, 159, 64, 0.6)'
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)'
+        ],
+        borderWidth: 1,
+        barPercentage: 1.0
+      }, {
+        label: 'Times Shown',
+        data: votingData[2],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)'
+        ],
+        borderWidth: 1,
+        barPercentage: 0.5
+      }
+      ]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1.0
+          }
+        }
+      }
+    }
+  });
 }

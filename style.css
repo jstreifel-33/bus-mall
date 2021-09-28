@@ -60,6 +60,15 @@ main{
   overflow: scroll;
 }
 
+canvas{
+  grid-column-start: 1;
+  grid-column-end: 4;
+}
+
+#myChart{
+  display:none;
+}
+
 /* results display */
 #resultSect{
   display: flex;
