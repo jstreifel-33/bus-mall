@@ -2,7 +2,7 @@
 
 
 //Product constructor
-function Product(name, url){
+function Product(name, url) {
   this.name = name;
   this.url = 'assets/' + url;
   this.votes = 0;
@@ -36,24 +36,24 @@ new Product('Wine-glass', 'wine-glass.jpg');
 
 
 //random index function
-function randIndex(array){
+function randIndex(array) {
   let index = Math.floor(Math.random() * array.length);
   return index;
 }
 
 //function for cloning arrays.
-function cloneArray(array){
+function cloneArray(array) {
   let newArray = [];
-  for(let i = 0; i < array.length; i++){
+  for (let i = 0; i < array.length; i++) {
     newArray[i] = array[i];
   }
   return newArray;
 }
 
 //function for eliminating duplicates
-function dupeKill(obj, array){
-  for (let i = 0; i < array.length; i++){
-    if (obj.name === array[i].name){
+function dupeKill(obj, array) {
+  for (let i = 0; i < array.length; i++) {
+    if (obj.name === array[i].name) {
       array.splice(i, 1);
     }
   }
@@ -65,7 +65,7 @@ let choice2 = document.getElementById('img2');
 let choice3 = document.getElementById('img3');
 
 //function to pick and render 3 random products
-function renderChoices(){
+function renderChoices() {
 
   //clone Product pool for array manipulation
   let options = cloneArray(Product.allProducts);
@@ -108,21 +108,55 @@ function renderChoices(){
 //render initial choices
 renderChoices();
 
+let totalVotes = 0;
+
 //handle user input
-function choiceHandler(event){
-  let userChoice = event.target;
-  let choices = Product.allProducts;
-  console.log(userChoice.name);
-  for (let i = 0; i < choices.length; i++){
-    if(userChoice.name === choices[i].name){
-      choices[i].votes++;
+function choiceHandler(event) {
+  if (totalVotes < 25) {
+    let userChoice = event.target;
+    let choices = Product.allProducts;
+    console.log(userChoice.name);
+    for (let i = 0; i < choices.length; i++) {
+      if (userChoice.name === choices[i].name) {
+        choices[i].votes++;
+      }
     }
+    renderChoices();
+    totalVotes++;
+
+    if(totalVotes === 25){
+      alert('Voting complete! Please click "View Results" to see results!');
+      choice1.removeEventListener('click', choiceHandler);
+      choice2.removeEventListener('click', choiceHandler);
+      choice3.removeEventListener('click', choiceHandler);
+    }
+
   }
-  renderChoices();
 }
 
 choice1.addEventListener('click', choiceHandler);
 choice2.addEventListener('click', choiceHandler);
 choice3.addEventListener('click', choiceHandler);
 
+//Render results
 
+let resultsRendered = false;
+let listEl = document.getElementById('countList');
+
+function renderResults() {
+  if (totalVotes >= 25 && !resultsRendered) {
+    let products = Product.allProducts;
+    for (let i = 0; i < products.length; i++) {
+      let percentPicked = Math.round(1000 * products[i].votes / products[i].timesShown) / 10;
+      let text = products[i].name + ': ' + products[i].votes + ' votes. (' + percentPicked + '% of ' + products[i].timesShown + ' showings)';
+      let choiceEl = document.createElement('li');
+      choiceEl.innerText = text;
+      listEl.appendChild(choiceEl);
+    }
+    resultsRendered = true;
+  }else if(resultsRendered){
+    alert('Results already displayed!');
+  }else {
+    alert('25 votes required! Current votes: ' + totalVotes);
+  }
+}
