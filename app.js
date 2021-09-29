@@ -114,7 +114,7 @@ function choiceHandler(event) {
   if (totalVotes < 25) {
     let userChoice = event.target;
     let choices = Product.allProducts;
-    console.log(userChoice.name);
+    //console.log(userChoice.name);
     for (let i = 0; i < choices.length; i++) {
       if (userChoice.name === choices[i].name) {
         choices[i].votes++;
@@ -134,13 +134,14 @@ function choiceHandler(event) {
   }
 }
 
+//Track user selection w/ event listeners.
 choice1.addEventListener('click', choiceHandler);
 choice2.addEventListener('click', choiceHandler);
 choice3.addEventListener('click', choiceHandler);
 
-//return array containing voting results when invoked.
-function fetchData() {
-  let products = Product.allProducts;
+//return array containing voting results when invoked, to be used in chart
+function fetchChartData() {
+  let products = Product.allProducts;  //Change this to point to aggregate
   let names = [];
   let votes = [];
   let timesShown = [];
@@ -153,29 +154,32 @@ function fetchData() {
   return votingData;
 }
 
-//Render results
+//Render results. Uses boolean to track render. Prints results to listEl HTML ID 'countList'
 let resultsRendered = false;
 let listEl = document.getElementById('countList');
 
 function renderResults() {
   if (totalVotes >= 25 && !resultsRendered) {
     let products = Product.allProducts;
+    //Generate text for each product
     for (let i = 0; i < products.length; i++) {
       let text = '';
-
       if (products[i].timesShown === 0) {
         text = products[i].name + ': not shown';
       } else {
         let percentPicked = Math.round(1000 * products[i].votes / products[i].timesShown) / 10;
         text = products[i].name + ': ' + products[i].votes + ' votes. (' + percentPicked + '% of ' + products[i].timesShown + ' showings)';
       }
-
+      //Add text to ul results element
       let choiceEl = document.createElement('li');
       choiceEl.innerText = text;
       listEl.appendChild(choiceEl);
     }
+    //Render chart and change rendered state to true
+    updateStorage(products);
     renderChart();
     resultsRendered = true;
+    //Action if already rendered or not enough votes
   } else if (resultsRendered) {
     alert('Results already displayed!');
   } else {
@@ -183,21 +187,32 @@ function renderResults() {
   }
 }
 
+//Configuring and handling local storage
+//Aggregate votes and timesShown for each product
+
+function updateStorage(obj) {
+  if (localStorage.getItem('agData')) {
+    console.log('data found!');
+  } else {
+    let voteData = JSON.stringify(obj);
+    localStorage.setItem('agData', voteData);
+  }
+}
 
 //Configure Data Bar Chart
 function renderChart() {
   let greeting = document.getElementById('greeting');
   greeting.style.display = 'none';
 
-  let votingData = fetchData();
+  let aggregateData = fetchChartData();
   let ctx = document.getElementById('voteChart').getContext('2d');
   let voteChart = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: votingData[0],
+      labels: aggregateData[0],
       datasets: [{
         label: '# of Votes',
-        data: votingData[1],
+        data: aggregateData[1],
         backgroundColor: [
           'rgba(255, 99, 132, 0.6)',
           'rgba(54, 162, 235, 0.6)',
@@ -218,7 +233,7 @@ function renderChart() {
         barPercentage: 1.0
       }, {
         label: 'Times Shown',
-        data: votingData[2],
+        data: aggregateData[2],
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
           'rgba(54, 162, 235, 0.2)',
@@ -241,10 +256,16 @@ function renderChart() {
       ]
     },
     options: {
-      title: {
-        display: true,
-        text: 'Aggregated Votes'
-      }
+      plugins: {
+        title: {
+          display: true,
+          text: 'Aggregated Votes',
+          padding: 0,
+          font:{
+            size: 14
+          }
+        }
+      },
       scales: {
         y: {
           beginAtZero: true,
