@@ -141,7 +141,7 @@ choice3.addEventListener('click', choiceHandler);
 
 //return array containing voting results when invoked, to be used in chart
 function fetchChartData() {
-  let products = Product.allProducts;  //Change this to point to aggregate
+  let products = JSON.parse(localStorage.getItem('agData')); //grab aggregate data and parse into variable
   let names = [];
   let votes = [];
   let timesShown = [];
@@ -150,8 +150,8 @@ function fetchChartData() {
     votes[i] = products[i].votes;
     timesShown[i] = products[i].timesShown;
   }
-  let votingData = [names, votes, timesShown];
-  return votingData;
+  let chartData = [names, votes, timesShown];
+  return chartData;
 }
 
 //Render results. Uses boolean to track render. Prints results to listEl HTML ID 'countList'
@@ -189,12 +189,21 @@ function renderResults() {
 
 //Configuring and handling local storage
 //Aggregate votes and timesShown for each product
-
-function updateStorage(obj) {
+function updateStorage(sessionData) {
   if (localStorage.getItem('agData')) {
-    console.log('data found!');
+    //update aggregate data with current session data
+    let storedData = JSON.parse(localStorage.getItem('agData'));
+    for (let i = 0; i < storedData.length; i++){
+      let storedProduct = storedData[i];
+      let sessionProduct = sessionData[i];
+      storedProduct.votes += sessionProduct.votes;
+      storedProduct.timesShown += sessionProduct.timesShown;
+    }
+    let voteData = JSON.stringify(storedData);
+    localStorage.setItem('agData', voteData);
   } else {
-    let voteData = JSON.stringify(obj);
+    //store session data as start of aggregate data
+    let voteData = JSON.stringify(sessionData);
     localStorage.setItem('agData', voteData);
   }
 }
