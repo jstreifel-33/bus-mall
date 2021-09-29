@@ -241,6 +241,10 @@ function renderChart() {
       ]
     },
     options: {
+      title: {
+        display: true,
+        text: 'Aggregated Votes'
+      }
       scales: {
         y: {
           beginAtZero: true,
