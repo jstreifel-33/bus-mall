@@ -123,7 +123,9 @@ function choiceHandler(event) {
     totalVotes++;
 
     if (totalVotes === 25) {
-      alert('Voting complete! Please click "View Results" to see results!');
+      //alert('Voting complete! Please click "View Results" to see results!');
+      document.getElementById('view').style.backgroundColor = '#17B370';
+      document.getElementById('viewReady').style.display = 'block';
       choice1.removeEventListener('click', choiceHandler);
       choice2.removeEventListener('click', choiceHandler);
       choice3.removeEventListener('click', choiceHandler);
@@ -162,7 +164,7 @@ function renderResults() {
       let text = '';
 
       if (products[i].timesShown === 0) {
-        text = products[i].name + ': not shown.';
+        text = products[i].name + ': not shown';
       } else {
         let percentPicked = Math.round(1000 * products[i].votes / products[i].timesShown) / 10;
         text = products[i].name + ': ' + products[i].votes + ' votes. (' + percentPicked + '% of ' + products[i].timesShown + ' showings)';

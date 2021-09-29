@@ -1,53 +1,64 @@
 
 body{
   margin:15px;
+  background-color: #272D2D;
 }
 
 /* HEADER CONTENT */
 
 header{
   display: flex;
-  margin-bottom:5vh;
+  margin-bottom: 10px;
+  background-color: #3C6E71;
+  color: #ACC18A;
+  border: solid medium #931F1D;
 }
 
 header img{
-  margin-right:15px;
+  margin: 0 15px;
   max-height: 100px;
+}
+
+#viewReady{
+  display: none;
+  text-align: center;
 }
 
 /* MAIN CONTENT */
  
 main{
   display: flex;
-  height:80vh;
+  height: 80vh;
   justify-content: space-between;
 }
 
 /* product lineup */
 #products{
-  padding:3px;
+  padding: 3px;
   box-sizing: border-box;
-  display:grid;
-  width:73%;
-  height:100%;
+  display: grid;
+  width: 73%;
+  height: 100%;
   grid-template-columns: 33% 33% 33%;
   grid-template-rows: 50% 50%;
-  border: thin solid black;
+  border: solid medium #3C6E71;
+  background-color: #D6E3F8;
+  color: #272D2D;
 }
 
 #products img{
   box-sizing: border-box;
   border: thick black solid;
   box-sizing: border-box;
-  max-width:90%;
+  max-width: 90%;
   max-height: 90%;
   transition: all 350ms;
 }
 
 #products img:hover{
-  border: thick green solid;
-  max-width:100%;
-  max-height:100%;
+  border: thick #3C6E71 solid;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 #products p{
@@ -63,10 +74,7 @@ main{
 canvas{
   grid-column-start: 1;
   grid-column-end: 4;
-}
-
-#myChart{
-  display:none;
+  display: none;
 }
 
 /* results display */
@@ -76,21 +84,23 @@ canvas{
   box-sizing: border-box;
   width: 25%;
   height:100%;
-  border:thin solid black;
+  border: solid medium #3C6E71;
   overflow: scroll;
+  background-color: #D6E3F8;
+  color: #272D2D
 }
 
 #resultSect h3{
   text-align: center;
-  font-size:x-large;
+  font-size: x-large;
 }
 
 #view{
   display: block;
-  width:50%;
-  height:40px;
+  width: 50%;
+  height: 40px;
   background-color: rgba(105, 0, 0, 0.623);
-  color:whitesmoke;
+  color: whitesmoke;
   margin: 0px auto;
 }
 
@@ -98,9 +108,17 @@ canvas{
 
 footer{
   display: flex;
-  justify-content:center;
+  justify-content: center;
+  border: solid medium #931F1D;
+  background-color: #3C6E71;
+  margin-top: 10px;
 }
 
 footer p{
   display: block;
+  color: #ACC18A;
+}
+
+footer a{
+  color: #B0A1BA;
 }
